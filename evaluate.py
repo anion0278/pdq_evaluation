@@ -38,6 +38,7 @@ parser.add_argument('--greedy_mode', action='store_true', help='This flag indica
 parser.add_argument('--prob_seg', action='store_true', help='this flag indicates that the detections are probabilistic'
                                                             'segmentations and are formatted as such')
 parser.add_argument('--num_workers', default=6, type=int, help='Number of worker processes in CPU when calculating the PDQ score')
+parser.add_argument('--out_loc', help='output file')
 args = parser.parse_args()
 
 # Define these before using this code
@@ -133,6 +134,7 @@ def main():
 
     # Get summary statistics (PDQ, avg_qualities)
     evaluator = PDQ(filter_gts=(args.test_set == 'rvc1'), segment_mode=args.segment_mode, greedy_mode=args.greedy_mode)
+
     pdq = evaluator.score(param_sequence, num_workers=args.num_workers)
     TP, FP, FN = evaluator.get_assignment_counts()
     avg_spatial_quality = evaluator.get_avg_spatial_score()
@@ -156,6 +158,10 @@ def main():
     else:
         mAP = coco_mAP(param_sequence, use_heatmap=False)
         print('mAP: {0}'.format(mAP))
+
+    out_file = open(args.out_loc, "a+")
+    out_file.write(f" - PDQ: {pdq:.4f} - avg_pPDQ: {avg_overall_quality:.4f} - spatial_PDQ: {avg_spatial_quality:.4f} - label_PDQ: {avg_label_quality:.4f} - mAP: {mAP:.4f} - TP: {TP} - FP: {FP} - FN: {FN}")
+    out_file.close()
 
     # Calculate LRP
     print("Calculating LRP")

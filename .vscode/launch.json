@@ -1,0 +1,74 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": false
+        },
+        {
+            "name": "Python: Convert COCO to rvc1",
+            "type": "python",
+            "request": "launch",
+            "program": "file_convert_coco_to_rvc1.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "args": ["--coco_gt", "E:/datasets/real_merged_l515_640x480/instances_hands_full.json", 
+            "--coco_det", "E:/models/mediapipe/out.pkl.bbox.json", 
+            "--rvc1_det", "D:/source/repos/anion0278/pdq_evaluation/rvc1_det.json" ,
+            "--min_thrs", "0.9"]
+        },
+        {
+            "name": "Python: PDQ Evaluation",
+            "type": "python",
+            "request": "launch",
+            "program": "evaluate.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "args": ["--test_set", "coco", 
+            "--gt_loc", "E:/datasets/real_merged_l515_640x480/instances_hands_full.json", 
+            "--det_loc", "rvc1_det.json", 
+            "--save_folder", "D:/source/repos/anion0278/pdq_evaluation",
+            "--out_loc", "E:/models/mediapipe/pdq_score_threshold_evals.txt"]
+        },
+        {
+            "name": "Python: Visualize PDQ",
+            "type": "python",
+            "request": "launch",
+            "program": "visualise_pdq_analysis.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "args": [
+            "--data_type", "coco", 
+            "--ground_truth", "E:/datasets/real_merged_l515_640x480/instances_hands_full.json",
+            "--gt_img_folder", "E:/datasets/real_merged_l515_640x480/color/",
+            "--det_json", "D:/source/repos/anion0278/pdq_evaluation/rvc1_det.json",
+            "--gt_analysis", "gt_eval_stats_00.json",
+            "--det_analysis", "det_eval_stats_00.json",
+            "--save_folder", "D:/source/repos/anion0278/pdq_evaluation/vis",
+            "--img_type", "png",
+            "--full_info"
+            ]
+        },
+        {
+            "name": "Python: Visualize PROB",
+            "type": "python",
+            "request": "launch",
+            "program": "visualise_prob_detections.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "args": [
+            "--gt_img_folder", "E:/datasets/real_merged_l515_640x480/color/",
+            "--det_json", "D:/source/repos/anion0278/pdq_evaluation/rvc1_det.json",
+            "--save_folder", "D:/source/repos/anion0278/pdq_evaluation/vis_prob",
+            "--img_type", "png",
+            ]
+        }
+    ]
+}

@@ -8,7 +8,7 @@ import sys
 from convert_to_coco_input import generate_coco_ground_truth_and_detections
 
 # Temp way to get access to COCO code for now
-sys.path.append('/path/to/COCO/PythonAPI/')
+sys.path.append(r'D:/source/repos/anion0278/cocoapi-master/PythonAPI/')
 from pycocotools.cocoeval import COCOeval
 from pycocotools.coco import COCO
 
@@ -33,6 +33,8 @@ def coco_mAP(param_sequence, use_heatmap=True):
     # Finish creating the coco ground truth object
     coco_gt.dataset = coco_gt_dict
     coco_gt.createIndex()
+
+    if len(coco_det_list) == 0: return 0.0 # some models have produce no predictions with 1.0 score
 
     # Create detection COCO object
     coco_det = coco_gt.loadRes(coco_det_list)

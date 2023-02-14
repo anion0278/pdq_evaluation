@@ -5,7 +5,8 @@ parser = argparse.ArgumentParser('Convert COCO format detection .json file to an
 parser.add_argument('--coco_gt', help='coco format ground-truth .json file')
 parser.add_argument('--coco_det', help='coco format detections .json file')
 parser.add_argument('--rvc1_det', help='where to save .json file in converted rvc1 format')
+parser.add_argument('--min_thrs', help='min score threshold')
 args = parser.parse_args()
 
-read_files.convert_coco_det_to_rvc_det(args.coco_det, args.coco_gt, args.rvc1_det)
+read_files.convert_coco_det_to_rvc_det(args.coco_det, args.coco_gt, args.rvc1_det, float(args.min_thrs))
 

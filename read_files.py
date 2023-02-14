@@ -13,7 +13,7 @@ import sys
 import os.path as osp
 
 # Temp way to get access to COCO code for now
-sys.path.append('/path/to/COCO/PythonAPI/')
+sys.path.append(r'C:\Users\Stefan\source\repos\anion0278\SOLO\modified_packges')
 from pycocotools.coco import COCO
 
 
@@ -325,7 +325,7 @@ class GTLoader:
                 ]
 
 
-def convert_coco_det_to_rvc_det(det_filename, gt_filename, save_filename):
+def convert_coco_det_to_rvc_det(det_filename, gt_filename, save_filename, min_score_threshold):
     """
     Function for converting COCO format detection file into RVC1 format detection file
     :param det_filename: filename for original detections in COCO format
@@ -356,6 +356,7 @@ def convert_coco_det_to_rvc_det(det_filename, gt_filename, save_filename):
         img_coco_dets = [det_coco_dicts[idx] for idx in np.argwhere(det_img_ids == img_id).flatten()]
         img_rvc1_dets = []
         for det_idx, det in enumerate(img_coco_dets):
+            if det['score'] < min_score_threshold: continue
             # Note, currently assumes the detection has a bbox entry.
             # Transform to [x1, y1, x2, y2] format
             box = det['bbox']
@@ -368,10 +369,14 @@ def convert_coco_det_to_rvc_det(det_filename, gt_filename, save_filename):
                 if len(label_probs) != len(class_list):
                     sys.exit(f'ERROR! "all_scores" array for image {img_id} has size {len(label_probs)} but should have size {len(class_list)}')
             else:
-                # Extract score of chosen class and distribute remaining probability across all others
-                label_probs = np.ones(len(class_list)) * ((1 - det['score'])/(len(class_list)-1))
-                label_probs[ann_idx_map[det['category_id']]] = det['score']
-                label_probs = list(label_probs.astype(float))
+                if len(class_list) > 1:
+                    # Extract score of chosen class and distribute remaining probability across all others
+                    label_probs = np.ones(len(class_list)) * ((1 - det['score'])/(len(class_list)-1))
+                    label_probs[ann_idx_map[det['category_id']]] = det['score']
+                    label_probs = list(label_probs.astype(float))
+                else:
+                    label_probs = np.ones(len(class_list)) * det['score']
+                    label_probs = list(label_probs.astype(float))
             
             # Checking if the json has pre-calculated covariance matrices
             if 'covars' in det and det['covars'] is not None:

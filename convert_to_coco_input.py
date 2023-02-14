@@ -116,7 +116,7 @@ def generate_coco_ground_truth_and_detections(param_sequence, use_heatmap=True):
                 break
 
         if need_new_cat:
-            print("Missed a category. Appending")
+            #print("Missed a category. Appending")
             coco_gt_dict['categories'].append({"supercategory": "object",
                                                "name": str(i + 1),
                                                "id": i + 1})
