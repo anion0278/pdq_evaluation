@@ -10,6 +10,8 @@ ap_evaluator_path = "D:/source/repos/anion0278/SOLO"
 coco_dets_file_name = "out.pkl.bbox.json"
 rvc_dets_file_name = "rvc1_det.json"
 
+reevaluate_map = False
+
 arch_translation = {
     "mask_rcnn_r50_fpn" : "Mask R-CNN ResNet50",
     "mask_rcnn_r101_fpn" : "Mask R-CNN ResNet101",
@@ -32,8 +34,9 @@ def parse_config_and_channels_from_checkpoint_path(checkpoint_path):
     return matches.group('arch'), int(matches.group('channels'))
 
 def eval_pdq(model_dir):
-    # generate predictions and evaluate mAP 
-    # os.system(f"cd {ap_evaluator_path} && python {ap_evaluator_path}/paper/tester.py --checkpoint_path {model_dir} --eval segm")
+    if reevaluate_map:
+        # generate predictions and evaluate mAP 
+        os.system(f"cd {ap_evaluator_path} && python {ap_evaluator_path}/paper/tester.py --checkpoint_path {model_dir} --eval segm")
 
     out_file_path = os.path.join(model_dir, output_file_name)
 
